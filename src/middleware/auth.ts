@@ -20,9 +20,9 @@ Passport.use(new LocalStrategy(localOptions, (req => {
 // JWT Strategy
 const jwtOptions: JwtOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: "MY_SUPER_SECRET_KEY",
-    issuer: "NEUTRONIX.LLC",
-    audience: "MY_HOST_URL",
+    secretOrKey: process.env.JWT_SECRET,
+    issuer: process.env.JWT_ISSUER,
+    audience: process.env.HOST,
 };
 
 Passport.use(new JwtStrategy(jwtOptions, ((payload, done) => {
