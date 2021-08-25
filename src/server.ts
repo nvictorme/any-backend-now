@@ -2,6 +2,7 @@ import express, {Request, Response} from "express";
 import cors from "cors";
 import {config as environment} from "dotenv";
 import Auth from "./middleware/auth";
+import {MainRoutes, UsersRoutes} from "./routes";
 
 // Environment set-up
 environment({path: __dirname + '/.env'});
@@ -16,11 +17,9 @@ app.use(corsHandler);
 // Auth
 // app.use(Auth.initialize());
 
-// Routes
-app.get("/", (req: Request, res: Response) => {
-    const now = new Date().toLocaleString();
-    res.status(200).json({now});
-});
+// API Routes
+app.use('/', MainRoutes);
+app.use('/users', UsersRoutes);
 
 // Lift server
 const APP_NAME = process.env.APP_NAME;
