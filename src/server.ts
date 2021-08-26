@@ -1,13 +1,14 @@
+// Top-Level Environment set-up
+import {config as environment} from "dotenv";
+environment({path: __dirname + '/.env'});
+// DO NOT EDIT ABOVE THIS LINE
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-import {config as environment} from "dotenv";
+
 import {AuthRoutes, UsersRoutes} from "./routes";
 import {connection} from "./orm/connection";
-
-// Environment set-up
-environment({path: __dirname + '/.env'});
 
 // Initialize express application
 const app = express();
@@ -24,8 +25,7 @@ app.use('/auth', AuthRoutes);
 app.use('/users', UsersRoutes);
 
 // Lift server
-const APP_NAME = process.env.APP_NAME;
-const PORT = process.env.PORT;
+const {APP_NAME, PORT} = process.env;
 app.listen(PORT, async () => {
     try {
         // connect to database
