@@ -1,4 +1,10 @@
-import {Entity, Column, PrimaryGeneratedColumn} from "typeorm";
+import {
+    Entity,
+    Column,
+    BeforeInsert,
+} from "typeorm";
+import {createHmac} from "crypto";
+import {BaseEntity} from "./base";
 
 export enum Roles {
     BASIC = "basic",
@@ -6,25 +12,32 @@ export enum Roles {
 }
 
 export interface IUser {
-    id: string;
     email: string;
+    password: string;
     roles: Roles[];
     displayName: string;
     firstName: string;
     lastName: string;
     phone: string;
+    isActive: boolean;
 }
 
 @Entity("users")
-export class User implements IUser {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+export class User extends BaseEntity implements IUser {
 
     @Column({
         unique: true,
         length: 100
     })
     email: string;
+
+    @BeforeInsert()
+    hashPassword() {
+        this.password = createHmac("sha256", this.password).digest("hex");
+    }
+
+    @Column()
+    password: string;
 
     @Column({
         type: "set",
@@ -56,5 +69,8 @@ export class User implements IUser {
         length: 100
     })
     phone: string;
+
+    @Column({type: "boolean", default: true})
+    isActive: boolean;
 
 }

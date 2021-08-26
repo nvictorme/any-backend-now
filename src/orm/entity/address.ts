@@ -1,7 +1,7 @@
-import {Entity, Column, PrimaryGeneratedColumn} from "typeorm";
+import {Entity, Column} from "typeorm";
+import {BaseEntity} from "./base";
 
 export interface IAddress {
-    id: string;
     inCareOf: string;
     line1: string;
     line2: string;
@@ -11,10 +11,7 @@ export interface IAddress {
 }
 
 @Entity("addresses")
-export class Address implements IAddress {
-
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+export class Address extends BaseEntity implements IAddress {
 
     @Column({
         nullable: true,

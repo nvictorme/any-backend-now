@@ -6,6 +6,8 @@ import {
     StrategyOptions as JwtOptions,
     VerifyCallbackWithRequest
 } from "passport-jwt";
+import {getRepository} from "typeorm";
+import {User} from "../orm/entity/user";
 
 // Local Strategy
 const localOptions: LocalOptions = {
@@ -14,7 +16,7 @@ const localOptions: LocalOptions = {
 };
 
 Passport.use(new LocalStrategy(localOptions, (req => {
-    // TODO: Verify user credentials
+    // TODO
 })));
 
 // JWT Strategy
