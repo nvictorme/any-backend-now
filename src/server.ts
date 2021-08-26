@@ -1,8 +1,8 @@
-import express, {Request, Response} from "express";
+import express from "express";
 import cors from "cors";
 import {config as environment} from "dotenv";
-import Auth from "./middleware/auth";
-import {MainRoutes, UsersRoutes} from "./routes";
+import {AuthRoutes, UsersRoutes} from "./routes";
+import {connection} from "./orm/connection";
 
 // Environment set-up
 environment({path: __dirname + '/.env'});
@@ -18,12 +18,19 @@ app.use(corsHandler);
 // app.use(Auth.initialize());
 
 // API Routes
-app.use('/', MainRoutes);
+app.use('/auth', AuthRoutes);
 app.use('/users', UsersRoutes);
 
 // Lift server
 const APP_NAME = process.env.APP_NAME;
 const PORT = process.env.PORT;
-app.listen(PORT, () => {
-    console.log(`${APP_NAME} started listening on port ${PORT}`);
+app.listen(PORT, async () => {
+    try {
+        // connect to database
+        await connection.connect();
+        // server started
+        console.log(`${APP_NAME} started listening on port ${PORT}`);
+    } catch (error) {
+        console.error(error);
+    }
 });
