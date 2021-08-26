@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
 import {config as environment} from "dotenv";
 import {AuthRoutes, UsersRoutes} from "./routes";
 import {connection} from "./orm/connection";
@@ -10,9 +12,9 @@ environment({path: __dirname + '/.env'});
 // Initialize express application
 const app = express();
 
-// CORS
+// CORS, Headers & Logger
 const corsHandler = cors({origin: true});
-app.use(corsHandler);
+app.use(corsHandler).use(helmet()).use(morgan("combined"));
 
 // Auth
 // app.use(Auth.initialize());
