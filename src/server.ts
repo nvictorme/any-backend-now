@@ -7,18 +7,22 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 
+import Auth from "./middleware/auth";
 import {AuthRoutes, UsersRoutes} from "./routes";
 import {connection} from "./orm/connection";
 
 // Initialize express application
 const app = express();
 
-// CORS, Headers & Logger
+// CORS, JSON, Headers & Logger
 const corsHandler = cors({origin: true});
-app.use(corsHandler).use(helmet()).use(morgan("combined"));
+app.use(corsHandler)
+    .use(express.json()) // Use JSON REST API, remove it otherwise
+    .use(helmet())
+    .use(morgan("combined"));
 
 // Auth
-// app.use(Auth.initialize());
+app.use(Auth.initialize());
 
 // API Routes
 app.use('/auth', AuthRoutes);
