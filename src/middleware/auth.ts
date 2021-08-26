@@ -8,6 +8,16 @@ import {
 } from "passport-jwt";
 import {getRepository} from "typeorm";
 import {User} from "../orm/entity/user";
+import {encryptPassword} from "../helpers/encryption";
+
+Passport.serializeUser(((user: any, done) => {
+    done(null, user.id)
+}))
+
+Passport.deserializeUser((async (id: string, done) => {
+    const user = await getRepository(User).findOne(id)
+    done(null, user)
+}))
 
 // Local Strategy
 const localOptions: LocalOptions = {
@@ -15,9 +25,24 @@ const localOptions: LocalOptions = {
     passwordField: "password",
 };
 
-Passport.use(new LocalStrategy(localOptions, (req => {
-    // TODO
-})));
+Passport.use(
+    new LocalStrategy(localOptions,
+
+        async (username, password, done) => {
+            try {
+                const user = await getRepository(User).findOne({email: username});
+                if (!user) return done(null, false, {message: "invalid params"});
+
+                const hash = encryptPassword(password);
+                if (hash !== user?.password) return done(null, false, {message: "invalid params"});
+
+                return done(null, user);
+            } catch (error) {
+                return done(error);
+            }
+
+        })
+);
 
 // JWT Strategy
 const jwtOptions: JwtOptions = {

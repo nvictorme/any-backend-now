@@ -23,6 +23,7 @@ app.use(corsHandler)
 
 // Auth
 app.use(Auth.initialize());
+app.use(Auth.session());
 
 // API Routes
 app.use('/auth', AuthRoutes);
