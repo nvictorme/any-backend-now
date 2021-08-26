@@ -3,7 +3,7 @@ import Auth from "../middleware/auth";
 
 const AuthRoutes: Router = Router();
 
-AuthRoutes.post("/login", Auth.authenticate("local"),(req: Request, res: Response) => {
+AuthRoutes.post("/login",(req: Request, res: Response) => {
     try {
         const {body} = req;
         res.status(200).json(body);
