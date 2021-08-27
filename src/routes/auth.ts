@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
 import Auth from "../middleware/auth";
-import {decodeToken, deriveTokens, ITokens} from "../providers/encryption";
+import {decodeToken, deriveTokens, ITokens, verifyRefreshToken} from "../providers/encryption";
 import {User} from "../orm/entity/user";
 import {getRepository} from "typeorm";
 import {redis} from "../providers/redis";
@@ -67,10 +67,12 @@ AuthRoutes.post("/token", Auth.authenticate("jwt", {session: false}), async (req
         // if there's no token, return 401
         if (!refreshToken) return res.status(401).json({message: "missing params"});
 
-        // decode token and compare user.id
-        const decoded: any = decodeToken(refreshToken);
+        // verify signature
+        const verified: any = verifyRefreshToken(refreshToken);
+
+        // compare user.id && tokens
         const storedRefreshToken = await redis.get(user.id);
-        if (user.id !== decoded.user.id || refreshToken !== storedRefreshToken) return res.status(403).json({message: "invalid token"});
+        if (user.id !== verified.user.id || refreshToken !== storedRefreshToken) return res.status(403).json({message: "invalid token"});
 
         // otherwise, login to refresh both tokens
         await login(user, res);

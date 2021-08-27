@@ -19,6 +19,14 @@ export const decodeToken = (token: string) => {
     return jwt.decode(token)
 }
 
+export const verifyAccessToken = (token: string) => {
+    return jwt.verify(token,process.env.JWT_ACCESS_SECRET ?? "super_secret");
+}
+
+export const verifyRefreshToken = (token: string) => {
+    return jwt.verify(token,process.env.JWT_REFRESH_SECRET ?? "super_secret");
+}
+
 export interface ITokens {
     accessToken: string;
     refreshToken: string;
