@@ -3,8 +3,9 @@ import {
     Column,
     BeforeInsert,
 } from "typeorm";
-import {createHmac} from "crypto";
+import {encryptPassword} from "../../helpers/encryption";
 import {BaseEntity} from "./base";
+
 
 export enum Roles {
     BASIC = "basic",
@@ -33,7 +34,7 @@ export class User extends BaseEntity implements IUser {
 
     @BeforeInsert()
     hashPassword() {
-        this.password = createHmac("sha256", this.password).digest("hex");
+        this.password = encryptPassword(this.password);
     }
 
     @Column()
@@ -72,5 +73,6 @@ export class User extends BaseEntity implements IUser {
 
     @Column({type: "boolean", default: true})
     isActive: boolean;
-
 }
+
+export const userHasRole = (user: User, expectedRoles: Roles[]): boolean => user.roles.some(r => expectedRoles.includes(r));

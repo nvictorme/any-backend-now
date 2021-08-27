@@ -1,5 +1,6 @@
 // Top-Level Environment set-up
 import {config as environment} from "dotenv";
+
 environment({path: __dirname + '/.env'});
 // DO NOT EDIT ABOVE THIS LINE
 import express from "express";
@@ -17,7 +18,8 @@ const app = express();
 // CORS, JSON, Headers & Logger
 const corsHandler = cors({origin: true});
 app.use(corsHandler)
-    .use(express.json()) // Use JSON REST API, remove it otherwise
+    .use(express.urlencoded({extended: true})) // Support for Form URL Encoded Body
+    .use(express.json()) // Support for JSON Body
     .use(helmet())
     .use(morgan("combined"));
 
