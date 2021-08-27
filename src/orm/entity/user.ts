@@ -3,7 +3,7 @@ import {
     Column,
     BeforeInsert,
 } from "typeorm";
-import {encryptPassword} from "../../helpers/encryption";
+import {encryptPassword} from "../../providers/encryption";
 import {BaseEntity} from "./base";
 
 
@@ -27,8 +27,8 @@ export interface IUser {
 export class User extends BaseEntity implements IUser {
 
     @Column({
+        length: 100,
         unique: true,
-        length: 100
     })
     email: string;
 
