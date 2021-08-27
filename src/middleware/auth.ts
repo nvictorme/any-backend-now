@@ -1,13 +1,12 @@
 import Passport from "passport";
-import {Strategy as LocalStrategy, IStrategyOptions as LocalOptions} from "passport-local";
+import {Strategy as LocalStrategy} from "passport-local";
 import {
     Strategy as JwtStrategy,
     ExtractJwt,
-    StrategyOptions as JwtOptions,
 } from "passport-jwt";
 import {getRepository} from "typeorm";
 import {User} from "../orm/entity/user";
-import {encryptPassword} from "../helpers/encryption";
+import {encryptPassword} from "../providers/encryption";
 
 Passport.serializeUser(((user: any, done) => {
     done(null, user.id)
@@ -19,14 +18,12 @@ Passport.deserializeUser((async (id: string, done) => {
 }))
 
 // Local Strategy
-const localOptions: LocalOptions = {
-    usernameField: "email",
-    passwordField: "password",
-};
-
 Passport.use("local",
 
-    new LocalStrategy(localOptions,
+    new LocalStrategy({
+            usernameField: "email",
+            passwordField: "password",
+        },
 
         async (username, password, done) => {
             try {
@@ -44,15 +41,13 @@ Passport.use("local",
         })
 );
 
-// JWT Strategy
-const jwtOptions: JwtOptions = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.JWT_SECRET,
-};
-
+// JWT Strategy - accessToken
 Passport.use("jwt",
 
-    new JwtStrategy(jwtOptions,
+    new JwtStrategy({
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            secretOrKey: process.env.JWT_ACCESS_SECRET,
+        },
 
         async (token, done) => {
             try {
