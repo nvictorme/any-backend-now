@@ -73,5 +73,6 @@ export class User extends BaseEntity implements IUser {
 
     @Column({type: "boolean", default: true})
     isActive: boolean;
-
 }
+
+export const userHasRole = (user: User, expectedRoles: Roles[]): boolean => user.roles.some(r => expectedRoles.includes(r));

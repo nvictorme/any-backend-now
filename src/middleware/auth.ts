@@ -24,7 +24,8 @@ const localOptions: LocalOptions = {
     passwordField: "password",
 };
 
-Passport.use(
+Passport.use("local",
+
     new LocalStrategy(localOptions,
 
         async (username, password, done) => {
@@ -47,15 +48,15 @@ Passport.use(
 const jwtOptions: JwtOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.JWT_SECRET,
-    issuer: process.env.JWT_ISSUER,
-    audience: process.env.HOST,
 };
 
-Passport.use(
+Passport.use("jwt",
+
     new JwtStrategy(jwtOptions,
-        async (jwt_payload, done) => {
+
+        async (token, done) => {
             try {
-                const user = await getRepository(User).findOne({id: jwt_payload.sub});
+                const user = await getRepository(User).findOne(token.user.id);
                 if (!user) return done(null, false);
                 // hide password from user dto
                 return done(null, {...user, password: null});
