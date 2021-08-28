@@ -7,8 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "build:dev": "tsc --watch",
-    "start:dev": "nodemon dist/server.js",
-    "start": "node dist/server.js"
+    "start:dev": "ENV=dev nodemon dist/server.js",
+    "start:stg": "ENV=stg node dist/server.js",
+    "start": "ENV=prod node dist/server.js"
   },
   "keywords": [],
   "author": "",
