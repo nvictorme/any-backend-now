@@ -1,7 +1,7 @@
 {
   "name": "any-backend-now",
   "version": "1.0.0",
-  "description": "",
+  "description": "Clean, simple, agnostic REST API scaffold; built with TypeScript, Express, Passport, JWT, Redis, TypeORM and all the good stuff.",
   "main": "dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
