@@ -7,6 +7,8 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import swaggerUI from "swagger-ui-express";
+import swaggerDoc from "./swagger.json";
 
 import Auth from "./middleware/auth";
 import {AuthRoutes, UsersRoutes} from "./routes";
@@ -29,6 +31,9 @@ app.use(Auth.initialize());
 // API Routes
 app.use('/auth', AuthRoutes);
 app.use('/users', UsersRoutes);
+
+// Swagger Route
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
 
 // Lift server
 const {APP_NAME, PORT} = process.env;
