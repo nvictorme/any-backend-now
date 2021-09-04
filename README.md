@@ -14,6 +14,7 @@ any-backend-now includes out-of-the-box:
 - Authentication & Authorization with Passport Local & JWT strategies
 - Uses Redis as in-memory store for the refresh tokens
 - Dockerimage file for when you're ready to build for production
+- Swagger UI for OpenAPI Docs
 
 Notes:
 - TypeORM is set to use MySQL, but you can change it to PostgreSQL, Mongo, etc.
@@ -34,5 +35,12 @@ Notes:
 1. copy `.env.dev` and rename it `.env.prod`. Edit the latter with your production params.
 2. build docker image with: `docker build -t name_of_your_image .`
 3. run docker container with: `docker --name name_for_your_container -p local_port:3000 name_of_your_image`
+
+## Swagger UI 
+
+Edit the swagger file `/src/swagger.json`. 
+API docs found at `localhost:3000/api-docs/`.
+
+
 
 **Fun, fast and easy** :)
