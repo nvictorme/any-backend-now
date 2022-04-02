@@ -13,6 +13,7 @@ any-backend-now includes out-of-the-box:
 - BaseEntity Class you can use to extend your TypeORM models. (Keep it D.R.Y)
 - Authentication & Authorization with Passport Local & JWT strategies
 - Uses Redis as in-memory store for the refresh tokens
+- AWS and Sendgrid integration
 - Dockerimage file for when you're ready to build for production
 - Swagger UI for OpenAPI Docs
 
