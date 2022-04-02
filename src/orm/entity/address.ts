@@ -1,5 +1,6 @@
-import {Entity, Column} from "typeorm";
+import {Entity, Column, ManyToOne} from "typeorm";
 import {BaseEntity} from "./base";
+import {User} from "./user";
 
 export interface IAddress {
     inCareOf: string;
@@ -8,6 +9,7 @@ export interface IAddress {
     city: string;
     state: string;
     zipcode: string;
+    user: User;
 }
 
 @Entity("addresses")
@@ -48,5 +50,8 @@ export class Address extends BaseEntity implements IAddress {
         length: 10
     })
     zipcode: string;
+
+    @ManyToOne(() => User, user => user.addresses)
+    user: User;
 
 }
