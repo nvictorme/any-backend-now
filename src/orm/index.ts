@@ -1,4 +1,5 @@
-import {getConnectionManager, ConnectionManager, Connection} from "typeorm";
+import "reflect-metadata";
+import {DataSource} from "typeorm";
 
 const {
     MYSQL_HOST,
@@ -11,9 +12,7 @@ const {
     REDIS_PASSWORD
 } = process.env;
 
-const connectionManager: ConnectionManager = getConnectionManager();
-
-export const connection: Connection = connectionManager.create({
+const AppDataSource: DataSource = new DataSource({
     name: "default",
     type: "mysql",
     host: MYSQL_HOST,
@@ -42,3 +41,5 @@ export const connection: Connection = connectionManager.create({
         __dirname + "/subscriber/*.js"
     ]
 });
+
+export {AppDataSource};
