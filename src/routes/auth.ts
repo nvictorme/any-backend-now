@@ -8,7 +8,6 @@ import {
     verifyRefreshToken, verifyResetToken
 } from "../providers/encryption";
 import {User} from "../orm/entity/user";
-import {getRepository} from "typeorm";
 import {redis} from "../providers/redis";
 import {emailPasswordResetLink} from "../providers/email";
 import {AppDataSource} from "../orm";
@@ -35,7 +34,7 @@ AuthRoutes.post("/register", async (req: Request, res: Response) => {
         const user: User = new User();
         user.email = email.toLowerCase();
         user.password = password;
-        const newUser = await getRepository(User).save(user);
+        const newUser = await AppDataSource.getRepository(User).save(user);
         await login(newUser, res);
     } catch (e: any) {
         console.error(e.message);
