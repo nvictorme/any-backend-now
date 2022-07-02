@@ -12,7 +12,7 @@ FilesRoutes.get('/signed-url/:filename',
             const uploadUrl: string|null = await generateUploadUrl(filename);
             if (!uploadUrl) throw new Error("Couldn't generate signed-url.")
             res.status(200).json({uploadUrl});
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
             res.status(500).json({error: e.message});
         }

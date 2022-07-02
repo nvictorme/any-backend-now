@@ -4,7 +4,7 @@ import {
     Strategy as JwtStrategy,
     ExtractJwt,
 } from "passport-jwt";
-import {getRepository} from "typeorm";
+import {AppDataSource} from "../orm";
 import {User} from "../orm/entity/user";
 import {encryptPassword} from "../providers/encryption";
 
@@ -13,7 +13,7 @@ Passport.serializeUser(((user: any, done) => {
 }))
 
 Passport.deserializeUser((async (id: string, done) => {
-    const user = await getRepository(User).findOne(id)
+    const user = await AppDataSource.getRepository(User).findBy({id})
     done(null, user)
 }))
 
@@ -27,7 +27,7 @@ Passport.use("local",
 
         async (username, password, done) => {
             try {
-                const user = await getRepository(User).findOne({email: username});
+                const user = await AppDataSource.getRepository(User).findOneBy({email: username});
                 if (!user) return done(null, false, {message: "invalid params"});
 
                 const hash = encryptPassword(password);
@@ -51,7 +51,7 @@ Passport.use("jwt",
 
         async (token, done) => {
             try {
-                const user = await getRepository(User).findOne(token.user.id);
+                const user = await AppDataSource.getRepository(User).findOneBy({id: token.user.id})
                 if (!user) return done(null, false);
                 // hide password from user dto
                 return done(null, {...user, password: null});

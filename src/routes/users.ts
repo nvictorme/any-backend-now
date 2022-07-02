@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
 import Auth from "../middleware/auth";
+import {AppDataSource} from "../orm";
 import {Roles, User, userHasRole} from "../orm/entity/user";
-import {getRepository} from "typeorm";
 
 const UsersRoutes: Router = Router();
 
@@ -11,7 +11,7 @@ UsersRoutes.get("/", Auth.authenticate("jwt", {session: false}), async (req: Req
         if (!userHasRole(user, [Roles.ADMIN])) {
             return res.status(403).json({message: "You have no power here!"});
         }
-        const [users, count] = await getRepository(User).findAndCount();
+        const [users, count] = await AppDataSource.getRepository(User).findAndCount();
         res.status(200).json({count, users});
     } catch (e) {
         console.error(e);
@@ -21,7 +21,7 @@ UsersRoutes.get("/", Auth.authenticate("jwt", {session: false}), async (req: Req
 UsersRoutes.get("/:userId", Auth.authenticate("jwt", {session: false}), async (req: Request, res: Response) => {
     try {
         const {userId} = req.params;
-        const user = await getRepository(User).findOne(userId);
+        const user = await AppDataSource.getRepository(User).findOneBy({id: userId})
         if (!user) return res.status(404).json({message: `User not found.`});
         return res.status(200).json({user});
     } catch (e) {

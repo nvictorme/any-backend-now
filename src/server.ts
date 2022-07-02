@@ -12,7 +12,7 @@ import swaggerDoc from "./swagger.json";
 
 import Auth from "./middleware/auth";
 import {AuthRoutes, UsersRoutes, FilesRoutes} from "./routes";
-import {connection} from "./orm/connection";
+import {AppDataSource} from "./orm";
 
 // Initialize express application
 const app = express();
@@ -45,7 +45,7 @@ const {APP_NAME, PORT} = process.env;
 app.listen(PORT, async () => {
     try {
         // connect to database
-        await connection.connect();
+        await AppDataSource.initialize();
         // server started
         console.log(`${APP_NAME} started listening on port ${PORT}`);
     } catch (error) {
