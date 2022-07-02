@@ -34,8 +34,8 @@ Notes:
 ### Production
 
 1. copy `.env.dev` and rename it `.env.prod`. Edit the latter with your production params.
-2. build docker image with: `docker build -t name_of_your_image .`
-3. run docker container with: `docker --name name_for_your_container -p local_port:3000 name_of_your_image`
+2. build docker image with: `docker build -t some-image-name:tag .` (the dot `.` means the root folder of your project)
+3. run docker container with: `docker run --name some-container-name -p local_port:3000 -d some-image-name:tag`
 
 ## Swagger UI 
 

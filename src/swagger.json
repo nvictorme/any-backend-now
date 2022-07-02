@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "1.0.0",
+    "version": "1.1.1",
     "title": "Any Backend Now",
     "description": "Clean, simple, agnostic REST API scaffold; built with TypeScript, Express, Passport, JWT, Redis, TypeORM and all the good stuff.",
     "license": {
@@ -14,10 +14,16 @@
   "tags": [
     {
       "name": "Users",
-      "description": "API for users in the system"
+      "description": "Users"
+    },
+    {
+      "name": "Addresses",
+      "description": "Registered User Addresses"
     }
   ],
   "schemes": ["http"],
   "consumes": ["application/json"],
-  "produces": ["application/json"]
+  "produces": ["application/json"],
+  "paths": {
+  }
 }

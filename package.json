@@ -1,6 +1,6 @@
 {
   "name": "any-backend-now",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Clean, simple, agnostic REST API scaffold; built with TypeScript, Express, Passport, JWT, Redis, TypeORM and all the good stuff.",
   "main": "dist/server.js",
   "scripts": {
