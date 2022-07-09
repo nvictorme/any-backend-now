@@ -3,5 +3,5 @@ dist/
 
 .idea/
 
-.env.prod
-.env.stg
+.env
+

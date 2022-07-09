@@ -25,7 +25,7 @@ Notes:
 
 ### Development
 
-1. edit the `.env.dev` file with your params
+1. rename `.env.example` to `.env` and set your development environment variables.
 2. install dependencies with `npm install`
 3. open a 1st terminal and run `npm run build:dev`. This will execute the typescript compiler in `watch mode`.
 4. open a 2nd terminal and run `npm run start:dev`. This will start the app with nodemon.
@@ -33,7 +33,7 @@ Notes:
 
 ### Production
 
-1. copy `.env.dev` and rename it `.env.prod`. Edit the latter with your production params.
+1. rename `.env.example` to `.env` and set your production environment variables.
 2. build docker image with: `docker build -t some-image-name:tag .` (the dot `.` means the root folder of your project)
 3. run docker container with: `docker run --name some-container-name -p local_port:3000 -d some-image-name:tag`
 
