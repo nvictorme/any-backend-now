@@ -32,13 +32,16 @@ app.use(Auth.initialize());
 app.set("views", "./src/views");
 app.set("view engine", "pug");
 
+// Swagger Route
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
+
 // API Routes
 app.use('/auth', AuthRoutes);
 app.use('/users', UsersRoutes);
 app.use('/files', FilesRoutes);
 
-// Swagger Route
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
+// 404 - catch-all
+app.use((req, res) => res.status(404).json({message: "Not found"}));
 
 // Lift server
 const {APP_NAME, PORT} = process.env;

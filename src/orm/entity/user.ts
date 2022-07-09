@@ -2,21 +2,18 @@ import {
     Entity,
     Column,
     BeforeInsert,
-    OneToMany,
+    OneToMany, ManyToMany,
 } from "typeorm";
 import {encryptPassword} from "../../providers/encryption";
 import {BaseEntity} from "./base";
 import {Address} from "./address";
-
-export enum Roles {
-    BASIC = "basic",
-    ADMIN = "admin"
-}
+import {Role} from "./role";
+import {JoinTable} from "typeorm";
 
 export interface IUser {
     email: string;
     password: string;
-    roles: Roles[];
+    roles: Role[];
     displayName: string;
     firstName: string;
     lastName: string;
@@ -43,13 +40,6 @@ export class User extends BaseEntity implements IUser {
     }
     @Column()
     password: string;
-
-    @Column({
-        type: "set",
-        enum: Roles,
-        default: [Roles.BASIC]
-    })
-    roles: Roles[];
 
     @Column({
         nullable: true,
@@ -99,6 +89,12 @@ export class User extends BaseEntity implements IUser {
 
     @OneToMany(() => Address, address => address.user)
     addresses: Address[];
+
+    @ManyToMany(() => Role)
+    @JoinTable()
+    roles: Role[];
 }
 
-export const userHasRole = (user: User, expectedRoles: Roles[]): boolean => user.roles.some(r => expectedRoles.includes(r));
+export const userHasRole = (user: User, expectedRoles: string[]): boolean => {
+    return user.roles.some((r: Role) => expectedRoles.includes(r.value));
+}

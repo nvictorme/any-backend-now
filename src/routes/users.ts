@@ -1,14 +1,14 @@
 import {Request, Response, Router} from "express";
 import Auth from "../middleware/auth";
 import {AppDataSource} from "../orm";
-import {Roles, User, userHasRole} from "../orm/entity/user";
+import {User, userHasRole} from "../orm/entity/user";
 
 const UsersRoutes: Router = Router();
 
 UsersRoutes.get("/", Auth.authenticate("jwt", {session: false}), async (req: Request, res: Response) => {
     try {
         const user = req.user as User;
-        if (!userHasRole(user, [Roles.ADMIN])) {
+        if (!userHasRole(user, ["admin"])) {
             return res.status(403).json({message: "You have no power here!"});
         }
         const [users, count] = await AppDataSource.getRepository(User).findAndCount();
