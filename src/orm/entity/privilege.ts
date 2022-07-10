@@ -4,8 +4,8 @@ import {User} from "./user";
 
 export interface IPrivilege {
     user: User;
-    admin: boolean;
     entity: string;
+    admin: boolean;
     create: boolean;
     read: boolean;
     update: boolean;
