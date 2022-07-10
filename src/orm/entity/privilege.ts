@@ -12,8 +12,6 @@ export interface IPrivilege {
     delete: boolean;
 }
 
-export type ExpectedPrivilege = { entity: string, action: keyof Omit<IPrivilege, "user" | "entity">, value: boolean };
-
 @Entity("privileges")
 export class Privilege extends BaseEntity implements IPrivilege {
 
@@ -37,4 +35,13 @@ export class Privilege extends BaseEntity implements IPrivilege {
 
     @ManyToOne(() => User, user => user.privileges)
     user: User;
+}
+
+export type ExpectedPrivilege = { entity: string, action: keyof Omit<IPrivilege, "user" | "entity">, value: boolean };
+
+export const userHasPrivilege = (user: User, expected: ExpectedPrivilege): boolean => {
+    return user.privileges.some((privilege: Privilege) =>
+        privilege.entity === expected.entity
+        && privilege[expected.action] === expected.value
+    );
 }

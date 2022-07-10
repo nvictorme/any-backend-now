@@ -11,7 +11,7 @@ import swaggerUI from "swagger-ui-express";
 import swaggerDoc from "./swagger.json";
 
 import Auth from "./middleware/auth";
-import {AuthRoutes, UsersRoutes, FilesRoutes} from "./routes";
+import {AuthRoutes, UsersRoutes, FilesRoutes, WebRoutes} from "./routes";
 import {AppDataSource} from "./orm";
 
 // Initialize express application
@@ -36,6 +36,7 @@ app.set("view engine", "pug");
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
 
 // API Routes
+app.use('', WebRoutes);
 app.use('/auth', AuthRoutes);
 app.use('/users', UsersRoutes);
 app.use('/files', FilesRoutes);

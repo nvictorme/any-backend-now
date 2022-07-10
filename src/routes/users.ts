@@ -1,11 +1,12 @@
 import {Request, Response, Router} from "express";
 import Auth from "../middleware/auth";
 import {AppDataSource} from "../orm";
-import {User, userHasPrivilege} from "../orm/entity/user";
+import {User} from "../orm/entity/user";
+import {userHasPrivilege} from "../orm/entity/privilege";
 
 const UsersRoutes: Router = Router();
 
-UsersRoutes.get("/", Auth.authenticate("jwt", {session: false}), async (req: Request, res: Response) => {
+UsersRoutes.get("/admin", Auth.authenticate("jwt", {session: false}), async (req: Request, res: Response) => {
     try {
         const user = req.user as User;
         if (!userHasPrivilege(user, {entity: User.name, action: "admin", value: true})) {

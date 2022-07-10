@@ -7,7 +7,7 @@ import {
 import {encryptPassword} from "../../providers/encryption";
 import {BaseEntity} from "./base";
 import {Address} from "./address";
-import {ExpectedPrivilege, IPrivilege, Privilege} from "./privilege";
+import {Privilege} from "./privilege";
 
 export interface IUser {
     email: string;
@@ -94,9 +94,4 @@ export class User extends BaseEntity implements IUser {
     privileges: Privilege[];
 }
 
-export const userHasPrivilege = (user: User, expected: ExpectedPrivilege): boolean => {
-    return user.privileges.some((privilege: Privilege) =>
-        privilege.entity === expected.entity
-        && privilege[expected.action] === expected.value
-    );
-}
+
