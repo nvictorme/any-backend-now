@@ -32,14 +32,16 @@ app.use(Auth.initialize());
 app.set("views", "./src/views");
 app.set("view engine", "pug");
 
-// Swagger Route
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
+// Web Routes - SSR
+app.use('', WebRoutes);
 
 // API Routes
-app.use('', WebRoutes);
 app.use('/auth', AuthRoutes);
 app.use('/users', UsersRoutes);
 app.use('/files', FilesRoutes);
+
+// Swagger Route
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
 
 // 404 - catch-all
 app.use((req, res) => res.status(404).json({message: "Not found"}));
