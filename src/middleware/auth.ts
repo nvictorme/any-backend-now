@@ -13,7 +13,7 @@ Passport.serializeUser(((user: any, done) => {
 }))
 
 Passport.deserializeUser((async (id: string, done) => {
-    const user = await AppDataSource.getRepository(User).findBy({id})
+    const user = await AppDataSource.getRepository(User).findOne({where: {id}, relations: ["privileges"]});
     done(null, user)
 }))
 
@@ -27,7 +27,10 @@ Passport.use("local",
 
         async (username, password, done) => {
             try {
-                const user = await AppDataSource.getRepository(User).findOneBy({email: username});
+                const user = await AppDataSource.getRepository(User).findOne({
+                    where: {email: username},
+                    relations: ["privileges"]
+                });
                 if (!user) return done(null, false, {message: "invalid params"});
 
                 const hash = encryptPassword(password);
@@ -51,7 +54,10 @@ Passport.use("jwt",
 
         async (token, done) => {
             try {
-                const user = await AppDataSource.getRepository(User).findOneBy({id: token.user.id})
+                const user = await AppDataSource.getRepository(User).findOne({
+                    where: {id: token.user.id},
+                    relations: ["privileges"]
+                });
                 if (!user) return done(null, false);
                 // hide password from user dto
                 return done(null, {...user, password: null});

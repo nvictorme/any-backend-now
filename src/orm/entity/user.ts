@@ -7,16 +7,11 @@ import {
 import {encryptPassword} from "../../providers/encryption";
 import {BaseEntity} from "./base";
 import {Address} from "./address";
-
-export enum Roles {
-    BASIC = "basic",
-    ADMIN = "admin"
-}
+import {ExpectedPrivilege, IPrivilege, Privilege} from "./privilege";
 
 export interface IUser {
     email: string;
     password: string;
-    roles: Roles[];
     displayName: string;
     firstName: string;
     lastName: string;
@@ -26,6 +21,7 @@ export interface IUser {
     country: string;
     isActive: boolean;
     addresses: Address[];
+    privileges: Privilege[];
 }
 
 @Entity("users")
@@ -41,15 +37,9 @@ export class User extends BaseEntity implements IUser {
     hashPassword() {
         this.password = encryptPassword(this.password);
     }
+
     @Column()
     password: string;
-
-    @Column({
-        type: "set",
-        enum: Roles,
-        default: [Roles.BASIC]
-    })
-    roles: Roles[];
 
     @Column({
         nullable: true,
@@ -99,6 +89,14 @@ export class User extends BaseEntity implements IUser {
 
     @OneToMany(() => Address, address => address.user)
     addresses: Address[];
+
+    @OneToMany(() => Privilege, privilege => privilege.user)
+    privileges: Privilege[];
 }
 
-export const userHasRole = (user: User, expectedRoles: Roles[]): boolean => user.roles.some(r => expectedRoles.includes(r));
+export const userHasPrivilege = (user: User, expected: ExpectedPrivilege): boolean => {
+    return user.privileges.some((privilege: Privilege) =>
+        privilege.entity === expected.entity
+        && privilege[expected.action] === expected.value
+    );
+}
