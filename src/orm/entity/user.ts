@@ -2,18 +2,16 @@ import {
     Entity,
     Column,
     BeforeInsert,
-    OneToMany, ManyToMany,
+    OneToMany,
 } from "typeorm";
 import {encryptPassword} from "../../providers/encryption";
 import {BaseEntity} from "./base";
 import {Address} from "./address";
-import {Role} from "./role";
-import {JoinTable} from "typeorm";
+import {ExpectedPrivilege, IPrivilege, Privilege} from "./privilege";
 
 export interface IUser {
     email: string;
     password: string;
-    roles: Role[];
     displayName: string;
     firstName: string;
     lastName: string;
@@ -23,6 +21,7 @@ export interface IUser {
     country: string;
     isActive: boolean;
     addresses: Address[];
+    privileges: Privilege[];
 }
 
 @Entity("users")
@@ -38,6 +37,7 @@ export class User extends BaseEntity implements IUser {
     hashPassword() {
         this.password = encryptPassword(this.password);
     }
+
     @Column()
     password: string;
 
@@ -90,11 +90,13 @@ export class User extends BaseEntity implements IUser {
     @OneToMany(() => Address, address => address.user)
     addresses: Address[];
 
-    @ManyToMany(() => Role)
-    @JoinTable()
-    roles: Role[];
+    @OneToMany(() => Privilege, privilege => privilege.user)
+    privileges: Privilege[];
 }
 
-export const userHasRole = (user: User, expectedRoles: string[]): boolean => {
-    return user.roles.some((r: Role) => expectedRoles.includes(r.value));
+export const userHasPrivilege = (user: User, expected: ExpectedPrivilege): boolean => {
+    return user.privileges.some((privilege: Privilege) =>
+        privilege.entity === expected.entity
+        && privilege[expected.action] === expected.value
+    );
 }

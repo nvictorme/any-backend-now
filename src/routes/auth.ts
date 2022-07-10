@@ -11,6 +11,8 @@ import {User} from "../orm/entity/user";
 import {redis} from "../providers/redis";
 import {emailPasswordResetLink} from "../providers/email";
 import {AppDataSource} from "../orm";
+import {Privilege} from "../orm/entity/privilege";
+import {Address} from "../orm/entity/address";
 
 const AuthRoutes: Router = Router();
 
@@ -34,8 +36,21 @@ AuthRoutes.post("/register", async (req: Request, res: Response) => {
         const user: User = new User();
         user.email = email.toLowerCase();
         user.password = password;
+        // create new user
         const newUser = await AppDataSource.getRepository(User).save(user);
-        await login(newUser, res);
+        // set default privileges
+        const privilege = new Privilege();
+        privilege.user = newUser;
+        privilege.entity = Address.name;
+        privilege.create = true;
+        privilege.update = true;
+        privilege.delete = true;
+        await AppDataSource.getRepository(Privilege).save(privilege);
+        // get user with privileges
+        const userWithPrivileges = await AppDataSource.getRepository(User)
+            .findOneOrFail({where: {id: newUser.id}, relations: ["privileges"]});
+        // login and return updated user
+        await login(userWithPrivileges, res);
     } catch (e: any) {
         console.error(e.message);
         if (e["code"] === "ER_DUP_ENTRY") {
