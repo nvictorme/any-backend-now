@@ -1,8 +1,3 @@
-// Top-Level Environment set-up
-import {config as environment} from "dotenv";
-environment({path: `${__dirname}/../.env`});
-// DO NOT EDIT ABOVE THIS LINE
-
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
