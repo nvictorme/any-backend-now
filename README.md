@@ -14,7 +14,7 @@ any-backend-now includes out-of-the-box:
 - Authentication & Authorization with Passport Local & JWT strategies
 - Uses Redis as in-memory store for the refresh tokens
 - AWS and Sendgrid integration
-- Dockerimage file for when you're ready to build for production
+- Dockerimage file for when you're ready to build for production (optional)
 - Swagger UI for OpenAPI Docs
 
 Notes:
@@ -23,17 +23,30 @@ Notes:
 
 ## How to run?
 
+### Pre-requisites
+- (Recommended, optional) Node 18
+- PM2, install with: `npm i pm2 -g`
+
 ### Development
 
-1. rename `.env.example` to `.env` and set your development environment variables.
+1. Edit `./ecosystem.config.js` and set your development environment variables under `env`.
 2. install dependencies with `npm install`
 3. open a 1st terminal and run `npm run build:dev`. This will execute the typescript compiler in `watch mode`.
-4. open a 2nd terminal and run `npm run start:dev`. This will start the app with nodemon.
-
+4. open a 2nd terminal and run `npm run start:dev`. This will start the app with pm2. It will reload on file change.
 
 ### Production
 
-1. rename `.env.example` to `.env` and set your production environment variables.
+#### Using PM2 (preferred)
+1. Edit `./ecosystem.config.js` and set your development environment variables under `env_production`.
+2. Compile the project using `npm run build`;
+3. Run with `npm start`.
+#### Updating Environment Variables in Production
+You can update environment variables by editing `./ecosystem.config.js`
+and then using `npm run reload` to inject them in your pm2 process;
+thus minimizing downtime.
+
+#### Using Docker (optional)
+1. Edit `./ecosystem.config.js` and set your development environment variables under `env_production`.
 2. build docker image with: `docker build -t some-image-name:tag .` (the dot `.` means the root folder of your project)
 3. run docker container with: `docker run --name some-container-name -p local_port:3000 -d some-image-name:tag`
 
